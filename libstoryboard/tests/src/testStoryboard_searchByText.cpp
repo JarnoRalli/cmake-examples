@@ -1,4 +1,4 @@
-#include "libstoryboard/storyboard.hpp"
+#include "storyboard/storyboard.hpp"
 
 int main (int argc, char *argv[])
 {
@@ -12,5 +12,5 @@ int main (int argc, char *argv[])
     else
     {   return 1;   }
 
-	return 0;
+    return 0;
 }

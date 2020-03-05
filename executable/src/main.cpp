@@ -1,5 +1,5 @@
 #include <iostream>
-#include <libstoryboard/storyboard.hpp>
+#include <storyboard/storyboard.hpp>
 
 
 int main (int argc, char *argv[])
