@@ -27,9 +27,9 @@ Simple unit tests have been implemented using CTest and Google Test. To execute 
 This is a simple executable that links against the LibStoryBoard. You must first build and install the LibStoryBoard. After that, when
 you run CMake for this project (i.e. for the Executable project), you will get an error complaining that "LibStoryBoard" configuration file is not found.
 If you're running CMake with GUI, simply point the variable `LibStoryBoard_DIR` to the directory where you installed the LibStoryBoard, 
-e.g. <CMAKE_INSTALL_PATH>/lib/cmake/LibStoryBoard, or you can call cmake with the following parameters:
+e.g. <CMAKE_INSTALL_PREFIX>/lib/cmake/LibStoryBoard, or you can call cmake with the following parameters:
 ```
-cmake -DLibStoryBoard_DIR=<CMAKE_INSTALL_PATH>/lib/cmake/LibStoryBoard -B <PATH_TO_BUILD_DIRECORY>
+cmake -DLibStoryBoard_DIR=<CMAKE_INSTALL_PREFIX>/lib/cmake/LibStoryBoard -B <PATH_TO_BUILD_DIRECORY>
 ```
 
 If you take a look at the CMakeLists.txt for the executable, you will find that we have not set include-directory and still the build system finds the
