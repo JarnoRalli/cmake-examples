@@ -75,7 +75,7 @@ install(EXPORT StoryBoardTargets
         NAMESPACE
             ${LIBRARY_NAMESPACE}
         DESTINATION
-            ${CMAKE_INSTALL_LIBDIR}/cmake
+            ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
 )
 
 # Add tests

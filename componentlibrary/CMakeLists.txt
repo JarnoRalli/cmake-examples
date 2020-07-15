@@ -60,7 +60,7 @@ write_basic_package_version_file(
 configure_package_config_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ComponentLibraryConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/ComponentLibraryConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
     PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
 )
 
@@ -68,5 +68,5 @@ configure_package_config_file(
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/ComponentLibraryConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/ComponentLibraryConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
 )
