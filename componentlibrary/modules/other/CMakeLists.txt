@@ -19,10 +19,11 @@ list(   APPEND
         include/other/other.hpp
 )
 
+# Add a library
 add_library (Other)
 
-#Add an alias so that library can be used inside the build tree, e.g. when testing
-add_library(${LIBRARY_NAMESPACE}Other ALIAS Other)
+# Add the library to a list of libraries
+set(MAIN_LIBRARY_LIST "${MAIN_LIBRARY_LIST};Other" CACHE INTERNAL "A list of the libraries in this project" FORCE)
 
 # Add directories to the target
 # PRIVATE and PUBLIC items will populate the INCLUDE_DIRECTORIES property of target
@@ -71,12 +72,23 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 # Export the targets to a script
 install(EXPORT OtherTargets
         FILE
-            ${MAIN_PROJECT_NAME}OtherTargets.cmake
+            ComponentLibraryOtherTargets.cmake
         NAMESPACE
-            ${LIBRARY_NAMESPACE}
+            ComponentLibrary::
         DESTINATION
             ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
 )
+
+#------------------------------
+# Add an alias for the library
+#------------------------------
+
+# Add an alias so that library can be used inside the build tree, e.g. when testing
+add_library(ComponentLibrary::Other ALIAS Other)
+
+#-----------
+# Add tests
+#-----------
 
 # Add tests
 include(CTest)

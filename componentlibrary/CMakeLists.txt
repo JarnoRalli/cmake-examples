@@ -21,6 +21,10 @@ set(MAIN_PROJECT_VERSION ${CMAKE_PROJECT_VERSION} CACHE STRING "Main project ver
 # Global namespace for all of the sub-components
 set(LIBRARY_NAMESPACE "${MAIN_PROJECT_NAME}::" CACHE STRING "Namespace for all of the libraries")
 
+# Global variable for storing all the internal libraries. Each add_library that also creates a target,
+# adds the name of the library to this list. This is then used internally in the ComponentLibraryConfig.cmake.in.
+set(MAIN_LIBRARY_LIST "" CACHE INTERNAL "A list of the libraries in this project" FORCE)
+
 # ------------------------------------------------------------------------
 # Generate documentation if Doxygen is found (requires CMake 3.3 to work)
 # ------------------------------------------------------------------------
@@ -55,6 +59,8 @@ write_basic_package_version_file(
     VERSION ${MAIN_PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
+
+message(STATUS "MAIN_LIBRARY_LIST: ${MAIN_LIBRARY_LIST}")
 
 # Create a configuration file
 configure_package_config_file(

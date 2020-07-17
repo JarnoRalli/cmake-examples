@@ -19,10 +19,11 @@ list(   APPEND
         include/storyboard/storyboard.hpp
 )
 
+# Add a library
 add_library (StoryBoard)
 
-#Add an alias so that library can be used inside the build tree, e.g. when testing
-add_library(${LIBRARY_NAMESPACE}StoryBoard ALIAS StoryBoard)
+# Add the library to a list of libraries
+set(MAIN_LIBRARY_LIST "${MAIN_LIBRARY_LIST};StoryBoard" CACHE INTERNAL "A list of the libraries in this project" FORCE)
 
 # Add directories to the target
 # PRIVATE and PUBLIC items will populate the INCLUDE_DIRECTORIES property of target
@@ -71,12 +72,23 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 # Export the targets to a script
 install(EXPORT StoryBoardTargets
         FILE
-            ${MAIN_PROJECT_NAME}StoryBoardTargets.cmake
+            ComponentLibraryStoryBoardTargets.cmake
         NAMESPACE
-            ${LIBRARY_NAMESPACE}
+            ComponentLibrary::
         DESTINATION
             ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
 )
+
+#------------------------------
+# Add an alias for the library
+#------------------------------
+
+# Add an alias so that library can be used inside the build tree, e.g. when testing
+add_library(ComponentLibrary::StoryBoard ALIAS StoryBoard)
+
+#-----------
+# Add tests
+#-----------
 
 # Add tests
 include(CTest)

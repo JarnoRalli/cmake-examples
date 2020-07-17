@@ -1,11 +1,28 @@
 include(CMakeFindDependencyMacro)
 
-set(_supported_components StoryBoard Other)
+@PACKAGE_INIT@
 
-foreach(_comp ${ComponentLibrary_FIND_COMPONENTS})
-  if (NOT ";${_supported_components};" MATCHES ${_comp})
-    set(ComponentLibrary_FOUND False)
-    set(ComponentLibrary_NOT_FOUND_MESSAGE "ComponentLibrary does not have the following component: ${_comp}")
-  endif()
-  include("${CMAKE_CURRENT_LIST_DIR}/ComponentLibrary${_comp}Targets.cmake")
-endforeach()
+# Check if the include- and lib directories exist
+set_and_check(ComponentLibrary_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(ComponentLibrary_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+
+# This is not needed as components are handled below
+#check_required_components(@MAIN_LIBRARY_LIST@)
+
+# A list of components that the ComponentLibrary has
+set(_supported_components @MAIN_LIBRARY_LIST@)
+
+# Handle components. If no components have been specified in the find_package then all the components are loaded.
+if( NOT ComponentLibrary_FIND_COMPONENTS )
+    foreach(_comp ${_supported_components})
+        include("${CMAKE_CURRENT_LIST_DIR}/ComponentLibrary${_comp}Targets.cmake")
+    endforeach()
+else()
+    foreach(_comp ${ComponentLibrary_FIND_COMPONENTS})
+        if (NOT ";${_supported_components};" MATCHES ${_comp})
+            set(ComponentLibrary_FOUND False)
+            set(ComponentLibrary_NOT_FOUND_MESSAGE "ComponentLibrary does not have the following component: ${_comp}")
+        endif()
+        include("${CMAKE_CURRENT_LIST_DIR}/ComponentLibrary${_comp}Targets.cmake")
+    endforeach()
+endif()
