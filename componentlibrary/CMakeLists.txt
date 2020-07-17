@@ -47,9 +47,29 @@ include(cmake/FetchGTest.txt)
 
 add_subdirectory(modules)
 
+add_library(ComponentLibrary INTERFACE)
+target_link_libraries(ComponentLibrary INTERFACE "${MAIN_LIBRARY_LIST}")
+
 #---------------------------
 # Installation instructions
 #---------------------------
+
+# Export the target
+install(TARGETS ComponentLibrary
+        EXPORT ComponentLibraryTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+# Export the targets to a script
+install(EXPORT ComponentLibraryTargets
+        FILE
+            ComponentLibraryTargets.cmake
+        NAMESPACE
+            ComponentLibrary::
+        DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
+)
 
 # Create a LibStoryBoardConfigVersion.cmake file
 include(CMakePackageConfigHelpers)
@@ -76,3 +96,5 @@ install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/ComponentLibraryConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ComponentLibrary
 )
+
+add_library(ComponentLibrary::ComponentLibrary ALIAS ComponentLibrary)
