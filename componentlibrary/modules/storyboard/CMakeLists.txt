@@ -51,7 +51,7 @@ target_sources (StoryBoard
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${src_files} ${header_files})
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "modules" )
 
-# Compile features for the target -> these get propagated to anyone linking against this library
+# Compile features for the target
 target_compile_features (StoryBoard PRIVATE cxx_std_14)
 
 #---------------------------

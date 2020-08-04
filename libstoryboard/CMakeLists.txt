@@ -69,8 +69,9 @@ target_sources (LibStoryBoard
 # Source group makes the files appear in same places in the logical structure
 # of the project as where they are in the disk. This is for IDEs such as Visual Studio
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${src_files} ${header_files})
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "modules" )
 
-# Compile features for the target -> these get propagated to anyone linking against this library
+# Compile features for the target
 target_compile_features (LibStoryBoard PRIVATE cxx_std_14)
 
 #---------------------------
@@ -121,6 +122,13 @@ install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/LibStoryBoardConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/LibStoryBoard
 )
+
+#------------------------------
+# Add an alias for the library
+#------------------------------
+
+# Add an alias so that library can be used inside the build tree, e.g. when testing
+add_library(LibStoryBoard::LibStoryBoard ALIAS LibStoryBoard)
 
 # Add tests
 include(CTest)
