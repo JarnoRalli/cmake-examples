@@ -1,4 +1,10 @@
-project(Content)
+# Here we use FetchContent in order to download and build 3rd party
+# Dependencies. FetchContent downloads source code of a 3rd party
+# library immediately, and exposes the contents (e.g. targets)
+# so that these can be used in commands like:
+# - file()
+# - target_link_libraries()
+
 include(FetchContent)
 
 message(STATUS "-------------")
@@ -15,14 +21,4 @@ FetchContent_Declare(
   GIT_SHALLOW TRUE
 )
 
-FetchContent_GetProperties(googletest)
-if(NOT googletest_POPULATED )
-  message(STATUS "\tFetch: Google test")
-  FetchContent_Populate(googletest)
-  #By default Google Test uses /Mt run-time linking which might cause problems, so we force it to use shared run-time
-  set(gtest_force_shared_crt TRUE CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib." FORCE)
-  message(STATUS "\t\tsource dir: ${googletest_SOURCE_DIR}")
-  message(STATUS "\t\tbinary dir: ${googletest_BINARY_DIR}")
-  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
-  message(STATUS "\tFetch: done")
-endif()
+FetchContent_MakeAvailable(googletest)

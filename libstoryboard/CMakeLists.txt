@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.14)
 
 message(STATUS "--------------")
 message(STATUS "LIBSTORYBOARD")
@@ -99,9 +99,10 @@ install(EXPORT LibStoryBoardTargets
             ${CMAKE_INSTALL_LIBDIR}/cmake/LibStoryBoard
 )
 
-# Create a LibStoryBoardConfigVersion.cmake file
+# Add helper functions for creating config files that allow other projects to use this library
 include(CMakePackageConfigHelpers)
 
+# Create a configuration version file
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/LibStoryBoardConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
