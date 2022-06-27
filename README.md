@@ -1,64 +1,44 @@
-# CMake Example
-CMake examples
+# CMake Examples
 
-# Modern CMake Build System Examples
-This repository contains two modern CMake examples: a library called `LibStoryBoard` and a library called `ComponentLibrary` that has several components.
-Both of the examples use the so called modern CMake approach for exporting and installing the targets, so that these are relocatable. What this means
-is that the installed library can be copied to another location, and we can discover the library using `find_package` and link against it. When the
-library is exported and installed using this approach (i.e. the library exports CMake configuration files along with the actual binaries). `find_package`
-has two modes of operation. These are the `CONFIG`- and the `MODULE` mode. In the case of the `MODULE` mode, CMake looks for a file called `Find<PackageName>.cmake`.
-This file contains the logic for finding where the binaries and header files are, and populating the corresponding variables in CMake. Some of these files are supplied with the CMake itself.
-In the `CONFIG` mode CMake looks for a file called `<PackageName>Config.cmake`. A cache entry called `<PackageName>_DIR` is created to hold the directory containing the configuration file.
+This repository contains two modern CMake examples: 
 
-# Libraries
+* A library called [LibStoryBoard](./libstoryboard/README.md) + [test executable](./executable_libstoryboard/README.md)
+* A library called [ComponentLibrary](./componentlibrary/README.md) + [test executable](./executable_componentlibrary/README.md)
 
+Both of the examples export and install the targets in such a way, that these are relocatable. What this means is that the installed
+directories can be copied, or moved to another place, and the libraries can still be linked against. Here installation means that only
+those files, like the headers and built binaries, are copied to the target location, without copying any of the intermediate files. Once the
+libraries have been installed, they can be discovered in the host project using using [find_package](https://cmake.org/cmake/help/latest/command/find_package.html).
+`find_package` has two modes of operation for seaching packages. These are the `CONFIG`- and the `MODULE` modes. In the case of the `MODULE` mode, 
+CMake looks for a file called `Find<PackageName>.cmake`. This file contains the logic for finding where the binaries and header files are, 
+and populating the corresponding variables in CMake. The `MODULE` code works with non-CMake based projects. Some of these files are supplied with the CMake itself. 
+In the `CONFIG` mode CMake looks for a file called `<PackageName>Config.cmake`. A cache entry called `<PackageName>_DIR` is created to hold the directory 
+containing the configuration file. When we install a library that used the modern CMake approach, the `<PackageName>Config.cmake` is generated
+during installation.
 
-## LibStoryBoard
-Implements a single library called `LibStoryBoard`.
-
-## ComponentLibrary
-Implements two different libraries: `StoryBoard` and `Other`. These are implemented so that `find_package` COMPONENTS
-can be used for linking against either, or both. For example:
+Following code snippet demonstrates how to discover a package called `ComponentLibrary`, and verify that it has a component called `StoryBoard`:
 
 ```
-find_package(ComponentLibrary 1.0 REQUIRED COMPONENTS StoryBoard)
-target_link_libraries (executable_componentlibrary ComponentLibrary::StoryBoard)
+find_package(ComponentLibrary 1.0 REQUIRED COMPONENTS StoryBoard CONFIG)
 ```
 
-## Installation
-Set the `CMAKE_INSTALL_PREFIX` to the location where you want to install the library. After having executed CMake, simply run
-`make all` and `make install` in the build folder. The configuration file(s) will be installed to `CMAKE_INSTALL_PREFIX/lib/cmake/<PackageName>` directory.
-
-## Doxygen Based Documentation
-Documentation is based on Doxygen and dot. In order to generate the documentation, these need to be installed:
-
-* `sudo apt-get install doxygen graphviz`
-* To build the documentation, run `make doc` in the build-folder.
-
-## Unit Tests
-Simple unit tests have been implemented using CTest and Google Test. To execute the unit tests, run `make test` in the build-folder.
-
-# Test Executables
-
-## Executable LibstoryBoard
-This is a simple executable that links against the `LibStoryBoard`. You must first build and install the `LibStoryBoard`. After that, when
-you run CMake for this project (i.e. for the Executable project), you will get an error complaining that `LibStoryBoard` configuration file is not found.
-If you're running CMake with GUI, simply point the variable `LibStoryBoard_DIR` to the directory where you installed the LibStoryBoard, 
-e.g. `<CMAKE_INSTALL_PREFIX>/lib/cmake/LibStoryBoard`, or you can call cmake with the following parameters:
+After this, we can link against that library using:
 
 ```
-cmake -DLibStoryBoard_DIR=<CMAKE_INSTALL_PREFIX>/lib/cmake/LibStoryBoard -B <PATH_TO_BUILD_DIRECORY>
+target_link_libraries(executable_componentlibrary ComponentLibrary::StoryBoard)
 ```
 
-If you take a look at the CMakeLists.txt for the executable, you will find that we have not set the include-directory and still the build system finds the
-header file for the LibStoryBoard (storyboard.hpp). This is due to the fact that this information is encoded in the target. The only thing we have configured
-for the executable is the following:
-```
-add_executable (executable ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
-target_link_libraries (executable LibStoryBoard::LibStoryBoard)
-```
+# How to Build and Test the LibStoryBoard
 
-## Executable ComponentLibrary
-This is a simple executable that links against the `ComponentLibrary`. You must first build and install the `ComponentLibrary`, and follow the same instructions
-as for the `Executable LibStoryBoard`.
+In order to build- and test linking the `LibStoryBoard`, you need to do the following:
+
+* Build and install the `LibStoryBoard` library as per these [instructions](./libstoryboard/README.md)
+* Build the `executable_libstoryboard` as per these [instructions](./executable_libstoryboard/README.md)
+
+# How to Build and Test the ComponentLibrary
+
+In order to build- and test linking the `LibStoryBoard`, you need to do the following:
+
+* Build and install the `ComponentLibrary` library as per these [instructions](./componentlibrary/README.md)
+* Build the `executable_componentlibrary` as per these [instructions](./executable_componentlibrary/README.md)
 

@@ -43,10 +43,14 @@ else( ${DOXYGEN_FOUND} )
     message( STATUS "\tDoxygen + dot NOT found, NOT building documentation" )
 endif(  ${DOXYGEN_FOUND}  )
 
-include(cmake/FetchGTest.txt)
+enable_testing()
+
+# Currently this example doesn't use GTest
+#include(cmake/FetchGTest.txt)
 
 add_subdirectory(modules)
 
+# Create an interface library that contains both of the real libraries
 add_library(ComponentLibrary INTERFACE)
 target_link_libraries(ComponentLibrary INTERFACE "${MAIN_LIBRARY_LIST}")
 

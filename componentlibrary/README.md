@@ -15,8 +15,7 @@ doesn't compile anything on its own, it only acts as an interface for other libr
 
 # Building and Installing
 
-The library needs to be built and installed before it can be used in another project. Following builds- and
-installs the library.
+The library needs to be built and installed before it can be used in another project. Following commands build- and install the library, and execute the tests.
 
 ```bash
 cd componentlibrary
@@ -25,5 +24,28 @@ cd build
 mkdir install
 cmake .. -DCMAKE_INSTALL_PREFIX=./install
 make -j4
+make install
 make test
 ```
+
+# Install
+
+In the above script we installed the library. If you take a look at the directory `build/install`, you will find the
+following directories there:
+
+```
+|- include
+|  |
+|  |-other
+|  |-storyboard
+|
+|- lib
+   |
+   |-cmake
+     |
+     |-ComponentLibrary
+```
+
+`include` directory is self-explanatory, header files for `StoryBoard` and `Other` are located there. Inside the `lib`
+directory you can find the actual libraries and a directory called `cmake`. Inside the `cmake` directory are the exported
+CMake files that allows you to link against `ComponentLibrary` from other projects.

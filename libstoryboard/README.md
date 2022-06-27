@@ -4,16 +4,10 @@
 of notes posted in the `Storyboard`. The library exposes one target, called `LibStoryBoard::LibStoryBoard`,
 that can be linked against in another project in order to get access to the `Storyboard` functionality.
 
-# 3rd Party Libraries
-
-`LibStoryBoard` uses `GTest` for implementing simple unit tests. The example uses [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html)
-to download `GTest`'s source code, and to expose the targets `GTest::gtest_main`, `GTest::gmock_main`, `GTest::gtest` and `GTest::gmock` for linking. `GTest`
-will be built when building rest of the `LibStoryBoard`.
-
 # Building and Installing
 
-The library needs to be built and installed before it can be used in another project. Following builds- and
-installs the library, and executes the tests.
+The library needs to be built and installed before it can be used in another project. Following commands build- and
+install the library, and execute the tests.
 
 ```bash
 cd libstorybuild
@@ -34,20 +28,15 @@ following directories there:
 ```
 |- include
 |  |
-|  |-gmock
-|  |-gtest
 |  |-storyboard
 |
 |- lib
    |
    |-cmake
-   | |
-   | |-GTest
-   | |-LibStoryBoard
-   |
-   |-pkgconfig
+     |
+     |-LibStoryBoard
 ```
 
-`include` directory is self-explanatory, header files for both `GTest` and `LibStoryBoard` are located there. Inside the `lib`
+`include` directory is self-explanatory, header files for the `LibStoryBoard` are located there. Inside the `lib`
 directory you can find the actual libraries and a directory called `cmake`. Inside the `cmake` directory are the exported
-CMake files that allows you to link against both `GTest` and `LibStoryBoard` from other projects.
+CMake files that allows you to link against `LibStoryBoard` from other projects.
