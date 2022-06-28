@@ -30,20 +30,36 @@ make test
 
 # Install
 
-In the above script we installed the library. If you take a look at the directory `build/install`, you will find the
-following directories there:
+In the above script we installed the library. If you take a look at the directory `build/install` in Linux, you will find the
+following directories and files there:
 
 ```
 |- include
 |  |
 |  |-other
+|  | |
+|  | |-other.hpp
+|  | 
 |  |-storyboard
-|
+|    |
+|    |-storyboard.hpp
+|   
 |- lib
+   |
+   |-libOther.a
+   |-libStoryBoard.a
    |
    |-cmake
      |
      |-ComponentLibrary
+       |
+       |-ComponentLibraryConfig.cmake
+       |-ComponentLibraryConfigVersion.cmake
+       |-ComponentLibraryOtherTargets.cmake
+       |-ComponentLibraryOtherTargets-noconfig.cmake
+       |-ComponentLibraryStoryBoardTargets.cmake
+       |-ComponentLibraryStoryBoardTargets-noconfig.cmake
+       |-ComponentLibraryTargets.cmake
 ```
 
 `include` directory is self-explanatory, header files for `StoryBoard` and `Other` are located there. Inside the `lib`

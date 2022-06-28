@@ -22,19 +22,28 @@ make test
 
 # Install
 
-In the above script we installed the library. If you take a look at the directory `build/install`, you will find the
-following directories there:
+In the above script we installed the library. If you take a look at the directory `build/install` in Linux, you will find the
+following directories and files there:
 
 ```
 |- include
 |  |
 |  |-storyboard
+|    |
+|    |-storyboard.hpp
 |
 |- lib
+   |
+   |-libStoryBoard.a
    |
    |-cmake
      |
      |-LibStoryBoard
+       |
+       |-LibStoryBoardConfig.cmake
+       |-LibStoryBoardConfigVersion.cmake
+       |-LibStoryBoardTargets.cmake
+       |-LibStoryBoardTargets-noconfig.cmake
 ```
 
 `include` directory is self-explanatory, header files for the `LibStoryBoard` are located there. Inside the `lib`
