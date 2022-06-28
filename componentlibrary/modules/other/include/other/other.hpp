@@ -5,8 +5,7 @@
 
 namespace other{
 
-	int simple_function(int in);
+    int simple_function(int in);
 
 } //End of namespace other
-
 

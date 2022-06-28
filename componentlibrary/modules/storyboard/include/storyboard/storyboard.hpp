@@ -22,7 +22,7 @@ public:
     */
     Note() : m_title(""), m_text("")
     {}
-    
+
     /**
      * @brief Constructor with parameters
      * @param[in] title : Note's title
@@ -31,13 +31,13 @@ public:
     */
     Note( const std::string& title, const std::string& text, const t_tag_cont& tags ) : m_title(title), m_text(text), m_tags(tags)
     {}
-    
+
     /**
      * @brief Destructor
     */
     virtual ~Note()
     {}
-    
+
     /**
      * @brief operator==
      * @param[in] other : Compared object
@@ -49,7 +49,7 @@ public:
      * @brief print note data into std::cout
      */
     void printMe();
-    
+
     std::string m_title; /// Title of the note-object
     std::string m_text;  /// Text of the note-object
     t_tag_cont m_tags;   /// Tag(s) of the note-object
@@ -82,14 +82,14 @@ public:
      * @return number of elements that were deleted
     */
     int deleteNote( const Note& deleteMe );
-    
+
     /**
      * @brief Search the Storyboard for notes that contain the given string in the title field
      * @param[in] title : string that is matched
      * @param[in,out] container : notes in the Storyboard that contain the matched field are added into this container
     */
     int searchByTitle( const std::string& title, t_note_cont& container );
-    
+
     /**
      * @brief Search the Storyboard container for notes that contain the given string in the text field
      * @param[in] title : string that is matched

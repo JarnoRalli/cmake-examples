@@ -10,13 +10,14 @@ message(STATUS "EXECUTABLE LIBSTORYBOARD")
 message(STATUS "------------------------")
 
 # Project name, expected programming language is C++
-project (Executable_LibStoryBoard VERSION 1.0 LANGUAGES CXX)
+project(Executable_LibStoryBoard VERSION 1.0 LANGUAGES CXX)
 
 # Find the package LibStoryBoard
-find_package(LibStoryBoard 1.0 REQUIRED)
+find_package(LibStoryBoard 1.0 REQUIRED CONFIG)
 
-add_executable (executable_libstoryboard ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+# Create an executable
+add_executable(executable_libstoryboard ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
-target_link_libraries (executable_libstoryboard LibStoryBoard::LibStoryBoard)
-
+# Link against the LibStoryBoard
+target_link_libraries(executable_libstoryboard LibStoryBoard::LibStoryBoard)
 
