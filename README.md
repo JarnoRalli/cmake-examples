@@ -1,3 +1,5 @@
+![Linux](https://github.com/JarnoRalli/cmake-examples/actions/workflows/linux_build.yml/badge.svg)   ![Windows](https://github.com/JarnoRalli/cmake-examples/actions/workflows/windows_build.yml/badge.svg)   ![Code style](https://github.com/JarnoRalli/cmake-examples/actions/workflows/code_style.yml/badge.svg)
+
 # CMake Examples
 
 This repository contains two modern CMake examples: 
