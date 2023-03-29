@@ -3,9 +3,8 @@
 #include <string>
 #include <vector>
 
-namespace other{
+namespace other {
 
-    int simple_function(int in);
+int simple_function(int in);
 
-} //End of namespace other
-
+}  // End of namespace other

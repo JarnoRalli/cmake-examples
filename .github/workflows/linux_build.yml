@@ -1,0 +1,167 @@
+name: GCC Build
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  #---LINUX BUILD JOB(S)---
+  linux:
+    name: ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+    container: ubuntu:20.04
+    env:
+      DEBIAN_FRONTEND: "noninteractive"
+      oclus_build_type: "Release"
+      oclus_conan_path: "$HOME/.local/bin"
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+            name: "Ubuntu GCC",
+            cc: "gcc", cxx: "g++",
+          }
+    steps:
+      # Add Kitware APT sources for CMake
+      - name: Add Kitware APT sources
+        shell: bash
+        run: |
+          # Update package lists
+          apt update -qq
+          # Add Kitware APT repository in order to use new version of CMake
+          apt install -y gpg wget
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
+          apt update -qq
+          rm /usr/share/keyrings/kitware-archive-keyring.gpg
+          apt install -y kitware-archive-keyring
+
+      # Install apt-packages
+      - name: Update environment
+        shell: bash
+        run: |
+          # Install build tools
+          apt install -y \
+            gcc \
+            g++ \
+            clang \
+            cmake \
+            curl \
+            lld \
+            ninja-build \
+            pkg-config
+
+      #Check out the repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # LIBSTORYBOARD
+
+      #Configure library
+      - name: Configure library libstoryboard
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.cc }}
+          export CXX=${{ matrix.config.cxx }}
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=${{ env.oclus_build_type }} \
+            -D CMAKE_INSTALL_PREFIX=$(pwd)/libstoryboard/install \
+            -S $(pwd)/libstoryboard \
+            -B $(pwd)/libstoryboard/build
+
+      #Build library
+      - name: Build library libstoryboard
+        shell: bash
+        run: |
+          cmake --build libstoryboard/build --config ${{ env.oclus_build_type }} -j4
+
+      #Test library
+      - name: Test library libstoryboard
+        shell: bash
+        run: |
+          ctest --verbose -C ${{ env.oclus_build_type }} --test-dir libstoryboard/build
+
+      #Install library
+      - name: Install library libstoryboard
+        shell: bash
+        run: |
+          cmake --install libstoryboard/build
+
+      #Configure executable
+      - name: Configure executable libstoryboard
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.cc }}
+          export CXX=${{ matrix.config.cxx }}
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=${{ env.oclus_build_type }} \
+            -D LibStoryBoard_DIR=$(pwd)/libstoryboard/install/lib/cmake/LibStoryBoard \
+            -S $(pwd)/executable_libstoryboard \
+            -B $(pwd)/executable_libstoryboard/build
+
+      #Build executable
+      - name: Build executable libstoryboard
+        shell: bash
+        run: |
+          cmake --build executable_libstoryboard/build --config ${{ env.oclus_build_type }} -j4
+
+      # COMPONENTLIBRARY
+
+      #Configure library
+      - name: Configure library componentlibrary
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.cc }}
+          export CXX=${{ matrix.config.cxx }}
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=${{ env.oclus_build_type }} \
+            -D CMAKE_INSTALL_PREFIX=$(pwd)/componentlibrary/install \
+            -S $(pwd)/componentlibrary \
+            -B $(pwd)/componentlibrary/build
+
+      #Build library
+      - name: Build library componentlibrary
+        shell: bash
+        run: |
+          cmake --build componentlibrary/build --config ${{ env.oclus_build_type }} -j4
+
+      #Test library
+      - name: Test library componentlibrary
+        shell: bash
+        run: |
+          ctest --verbose -C ${{ env.oclus_build_type }} --test-dir componentlibrary/build
+
+      #Install library
+      - name: Install library componentlibrary
+        shell: bash
+        run: |
+          cmake --install componentlibrary/build
+
+      #Configure executable
+      - name: Configure executable componentlibrary
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.cc }}
+          export CXX=${{ matrix.config.cxx }}
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=${{ env.oclus_build_type }} \
+            -D ComponentLibrary_DIR=$(pwd)/componentlibrary/install/lib/cmake/ComponentLibrary \
+            -S $(pwd)/executable_componentlibrary \
+            -B $(pwd)/executable_componentlibrary/build
+
+      #Build executable
+      - name: Build executable componentlibrary
+        shell: bash
+        run: |
+          cmake --build executable_componentlibrary/build --config ${{ env.oclus_build_type }} -j4

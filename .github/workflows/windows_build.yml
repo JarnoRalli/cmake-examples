@@ -1,0 +1,131 @@
+name: Visual Studio Build
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  #---WINDOWS BUILD JOB(S)---
+  windows:
+    name: ${{ matrix.config.name }}
+    runs-on: windows-2019
+    env:
+      oclus_build_type: "Release"
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+            name: "Windows MSVC",
+            cc: "cl", cxx: "cl",
+            cmake_configure_options: '-G "Visual Studio 16 2019" -A x64',
+          }
+
+    steps:
+      #Install cmake using chocolatey
+      - name: Install cmake
+        shell: cmd
+        run: |
+          choco install cmake
+          refreshenv
+      
+      #Verify that cmake has been properly installed
+      - name: Check cmake installation
+        shell: cmd
+        run: |
+          where cmake
+          cmake --version
+
+      #Check out the repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # LIBSTORYBOARD
+
+      #Configure library
+      - name: Configure library libstoryboard
+        shell: pwsh
+        run: |
+          $env:CC="${{ matrix.config.cc }}"
+          $env:CXX="${{ matrix.config.cxx }}"
+          # Configure CMake
+          cmake ${{ matrix.config.cmake_configure_options }} -S libstoryboard -B libstoryboard/build -D CMAKE_INSTALL_PREFIX=libstoryboard/install
+
+      # Build library
+      - name: Build library libstoryboard
+        shell: pwsh
+        run: |
+          cmake --build libstoryboard/build --config ${{ env.oclus_build_type }} -- -maxCpuCount
+
+      # Test library
+      - name: Test library libstoryboard
+        shell: pwsh
+        run: |
+          ctest --verbose -C ${{ env.oclus_build_type }} --test-dir libstoryboard/build
+
+      #Install library
+      - name: Install library libstoryboard
+        shell: pwsh
+        run: |
+          cmake --install libstoryboard/build
+
+      #Configure executable
+      - name: Configure executable libstoryboard
+        shell: pwsh
+        run: |
+          $env:CC="${{ matrix.config.cc }}"
+          $env:CXX="${{ matrix.config.cxx }}"
+          # Configure CMake
+          cmake ${{ matrix.config.cmake_configure_options }} -D LibStoryBoard_DIR=$pwd/libstoryboard/install/lib/cmake/LibStoryBoard -S executable_libstoryboard -B executable_libstoryboard/build
+
+      # Build executable
+      - name: Build executable libstoryboard
+        shell: pwsh
+        run: |
+          cmake --build executable_libstoryboard/build --config ${{ env.oclus_build_type }} -- -maxCpuCount
+
+      # COMPONENTLIBRARY
+
+      #Configure library
+      - name: Configure library componentlibrary
+        shell: pwsh
+        run: |
+          $env:CC="${{ matrix.config.cc }}"
+          $env:CXX="${{ matrix.config.cxx }}"
+          # Configure CMake
+          cmake ${{ matrix.config.cmake_configure_options }} -S componentlibrary -B componentlibrary/build -D CMAKE_INSTALL_PREFIX=componentlibrary/install
+
+      # Build library
+      - name: Build library componentlibrary
+        shell: pwsh
+        run: |
+          cmake --build componentlibrary/build --config ${{ env.oclus_build_type }} -- -maxCpuCount
+
+      # Test library
+      - name: Test library componentlibrary
+        shell: pwsh
+        run: |
+          ctest --verbose -C ${{ env.oclus_build_type }} --test-dir componentlibrary/build
+
+      #Install library
+      - name: Install library componentlibrary
+        shell: pwsh
+        run: |
+          cmake --install componentlibrary/build
+
+      #Configure executable
+      - name: Configure executable componentlibrary
+        shell: pwsh
+        run: |
+          $env:CC="${{ matrix.config.cc }}"
+          $env:CXX="${{ matrix.config.cxx }}"
+          # Configure CMake
+          cmake ${{ matrix.config.cmake_configure_options }} -D ComponentLibrary_DIR=$pwd/componentlibrary/install/lib/cmake/ComponentLibrary -S executable_componentlibrary -B executable_componentlibrary/build
+
+      # Build executable
+      - name: Build executable componentlibrary
+        shell: pwsh
+        run: |
+          cmake --build executable_componentlibrary/build --config ${{ env.oclus_build_type }} -- -maxCpuCount
