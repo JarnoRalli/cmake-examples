@@ -3,7 +3,7 @@
 #-----------------------------------------------------
 
 # Minimum CMake version so that we can use the modern approach is 3.0
-cmake_minimum_required (VERSION 3.3)
+cmake_minimum_required (VERSION 3.14)
 
 message(STATUS "------------------------")
 message(STATUS "EXECUTABLE LIBSTORYBOARD")

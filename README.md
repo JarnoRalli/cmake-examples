@@ -1,5 +1,4 @@
-[![Code Style](https://github.com/JarnoRalli/cmake-examples/actions/workflows/code_style.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/code_style.yml)   [![GCC Build](https://github.com/JarnoRalli/cmake-examples/actions/workflows/linux_build.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/linux_build.yml)   [![Visual Studio Build](https://github.com/JarnoRalli/cmake-examples/actions/workflows/windows_build.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/windows_build.yml)
-
+[![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)   [![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)   [![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)
 
 # CMake Examples
 
