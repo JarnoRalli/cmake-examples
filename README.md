@@ -1,4 +1,4 @@
-[![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)   [![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)   [![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)
+[![CI](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/JarnoRalli/cmake-examples/actions/workflows/ci.yml)
 
 # CMake Examples
 
