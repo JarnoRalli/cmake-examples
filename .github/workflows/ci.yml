@@ -1,0 +1,261 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  style-check:
+    name: Clang Format
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+    env:
+      DEBIAN_FRONTEND: "noninteractive"
+    steps:
+      - name: Update environment
+        shell: bash
+        run: |
+          # Update package lists
+          apt update -qq
+          # Install tools
+          apt install -y \
+            clang-format-20 \
+            git
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Style check
+        shell: bash
+        run: |
+          find . \( -iname '*.hpp' -o -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' \) -not -path "./build/*" | xargs clang-format-20 --dry-run --Werror
+
+  build-linux:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+    needs: style-check
+    steps:
+      - name: Update environment
+        shell: bash
+        run: |
+          # Install build tools
+          apt update -qq
+          apt install -y \
+            gcc \
+            g++ \
+            clang \
+            cmake \
+            curl \
+            lld \
+            ninja-build \
+            pkg-config \
+            git
+
+      #Check out the repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # LIBSTORYBOARD
+
+      #Configure library
+      - name: Configure library libstoryboard
+        shell: bash
+        run: |
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_INSTALL_PREFIX=$(pwd)/libstoryboard/install \
+            -S $(pwd)/libstoryboard \
+            -B $(pwd)/libstoryboard/build
+
+      #Build library
+      - name: Build library libstoryboard
+        shell: bash
+        run: |
+          cmake --build libstoryboard/build --config Release -j4
+
+      #Test library
+      - name: Test library libstoryboard
+        shell: bash
+        run: |
+          ctest --verbose -C Release --test-dir libstoryboard/build
+
+      #Install library
+      - name: Install library libstoryboard
+        shell: bash
+        run: |
+          cmake --install libstoryboard/build
+
+      #Configure executable
+      - name: Configure executable libstoryboard
+        shell: bash
+        run: |
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D LibStoryBoard_DIR=$(pwd)/libstoryboard/install/lib/cmake/LibStoryBoard \
+            -S $(pwd)/executable_libstoryboard \
+            -B $(pwd)/executable_libstoryboard/build
+
+      #Build executable
+      - name: Build executable libstoryboard
+        shell: bash
+        run: |
+          cmake --build executable_libstoryboard/build --config Release -j4
+
+      # COMPONENTLIBRARY
+
+      #Configure library
+      - name: Configure library componentlibrary
+        shell: bash
+        run: |
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_INSTALL_PREFIX=$(pwd)/componentlibrary/install \
+            -S $(pwd)/componentlibrary \
+            -B $(pwd)/componentlibrary/build
+
+      #Build library
+      - name: Build library componentlibrary
+        shell: bash
+        run: |
+          cmake --build componentlibrary/build --config Release -j4
+
+      #Test library
+      - name: Test library componentlibrary
+        shell: bash
+        run: |
+          ctest --verbose -C Release --test-dir componentlibrary/build
+
+      #Install library
+      - name: Install library componentlibrary
+        shell: bash
+        run: |
+          cmake --install componentlibrary/build
+
+      #Configure executable
+      - name: Configure executable componentlibrary
+        shell: bash
+        run: |
+          # Configure cmake
+          cmake \
+            -G Ninja \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D ComponentLibrary_DIR=$(pwd)/componentlibrary/install/lib/cmake/ComponentLibrary \
+            -S $(pwd)/executable_componentlibrary \
+            -B $(pwd)/executable_componentlibrary/build
+
+      #Build executable
+      - name: Build executable componentlibrary
+        shell: bash
+        run: |
+          cmake --build executable_componentlibrary/build --config Release -j4
+
+  build-windows:
+    runs-on: windows-2022
+    needs: style-check
+    env:
+      cmake_configure_options: '-G "Visual Studio 17 2022" -A x64'
+    steps:
+      #Verify that cmake has been properly installed
+      - name: Check cmake installation
+        shell: cmd
+        run: |
+          where cmake
+          cmake --version
+
+      #Check out the repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # LIBSTORYBOARD
+
+      #Configure library
+      - name: Configure library libstoryboard
+        shell: pwsh
+        run: |
+          # Configure CMake
+          cmake ${{ env.cmake_configure_options }} -S libstoryboard -B libstoryboard/build -D CMAKE_INSTALL_PREFIX=libstoryboard/install
+
+      # Build library
+      - name: Build library libstoryboard
+        shell: pwsh
+        run: |
+          cmake --build libstoryboard/build --config Release -- -maxCpuCount
+
+      # Test library
+      - name: Test library libstoryboard
+        shell: pwsh
+        run: |
+          ctest --verbose -C Release --test-dir libstoryboard/build
+
+      #Install library
+      - name: Install library libstoryboard
+        shell: pwsh
+        run: |
+          cmake --install libstoryboard/build
+
+      #Configure executable
+      - name: Configure executable libstoryboard
+        shell: pwsh
+        run: |
+          # Configure CMake
+          cmake ${{ env.cmake_configure_options }} -D LibStoryBoard_DIR=${PWD}/libstoryboard/install/lib/cmake/LibStoryBoard -S executable_libstoryboard -B executable_libstoryboard/build
+
+      # Build executable
+      - name: Build executable libstoryboard
+        shell: pwsh
+        run: |
+          cmake --build executable_libstoryboard/build --config Release -- -maxCpuCount
+
+      # COMPONENTLIBRARY
+
+      #Configure library
+      - name: Configure library componentlibrary
+        shell: pwsh
+        run: |
+          # Configure CMake
+          cmake ${{ env.cmake_configure_options }} -S componentlibrary -B componentlibrary/build -D CMAKE_INSTALL_PREFIX=componentlibrary/install -D CMAKE_BUILD_TYPE=Release
+
+      # Build library
+      - name: Build library componentlibrary
+        shell: pwsh
+        run: |
+          cmake --build componentlibrary/build --config Release -- -maxCpuCount
+
+      # Test library
+      - name: Test library componentlibrary
+        shell: pwsh
+        run: |
+          ctest --verbose -C Release --test-dir componentlibrary/build
+
+      #Install library
+      - name: Install library componentlibrary
+        shell: pwsh
+        run: |
+          cmake --install componentlibrary/build
+
+      #Configure executable
+      - name: Configure executable componentlibrary
+        shell: pwsh
+        run: |
+          # Configure CMake
+          cmake ${{ env.cmake_configure_options }} -D ComponentLibrary_DIR=${PWD}/componentlibrary/install/lib/cmake/ComponentLibrary -S executable_componentlibrary -B executable_componentlibrary/build
+
+      # Build executable
+      - name: Build executable componentlibrary
+        shell: pwsh
+        run: |
+          cmake --build executable_componentlibrary/build --config Release -- -maxCpuCount
+
